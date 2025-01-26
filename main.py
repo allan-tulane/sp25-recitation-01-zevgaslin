@@ -7,9 +7,10 @@ import tabulate
 import time
 ###
 
+
 def linear_search(mylist, key):
 	""" done. """
-	for i,v in enumerate(mylist):
+	for i, v in enumerate(mylist):
 		if v == key:
 			return i
 	return -1
@@ -17,7 +18,8 @@ def linear_search(mylist, key):
 
 def binary_search(mylist, key):
 	""" done. """
-	return _binary_search(mylist, key, 0, len(mylist)-1)
+	return _binary_search(mylist, key, 0, len(mylist) - 1)
+
 
 def _binary_search(mylist, key, left, right):
 	"""
@@ -28,15 +30,23 @@ def _binary_search(mylist, key, left, right):
 	  key.......search key
 	  left......left index into list to search
 	  right.....right index into list to search
-
+	
 	Returns:
 	  index of key in mylist, or -1 if not present.
+
 	"""
 	### TODO
+	if left > right:
+		return -1
+	mid = (left + right) // 2
+	if mylist[mid] == key:
+		return mid
+	elif mylist[mid] < key:
+		return _binary_search(mylist, key, mid + 1, right)
+	elif mylist[mid] > key:
+		return _binary_search(mylist, key, left, mid - 1)
 
 	###
-
-
 
 
 def time_search(search_fn, mylist, key):
@@ -58,8 +68,12 @@ def time_search(search_fn, mylist, key):
 	  search function on this input.
 	"""
 	### TODO
-
+	start = time.time()
+	search_fn(mylist, key)
+	end = time.time()
+	return (end - start) * 1000
 	###
+
 
 def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
 	"""
@@ -77,13 +91,26 @@ def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
 	  for each method to run on each value of n
 	"""
 	### TODO
+	list = []
+	res = []
+	for i in sizes:
+		for j in range(i):
+			list.append(j)
+		tup = (i, time_search(linear_search, list,
+		                      -1), time_search(binary_search, list, -1))
+		res.append(tup)
+		list = []
 
+	return res
 	###
+
 
 def print_results(results):
 	""" done """
-	print(tabulate.tabulate(results,
-							headers=['n', 'linear', 'binary'],
-							floatfmt=".3f",
-							tablefmt="github"))
+	print(
+	    tabulate.tabulate(results,
+	                      headers=['n', 'linear', 'binary'],
+	                      floatfmt=".3f",
+	                      tablefmt="github"))
+
 
